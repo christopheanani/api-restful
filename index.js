@@ -15,17 +15,17 @@ const pool = mysql.createPool({
     host            : 'localhost',
     user            : 'root',
     password        : '',
-    database        : 'nodejs_beers',
+    database        : 'nodejs_etudiant',
 })
 
-//  Get all beers
+//  Get all student
 app.get('', (req, res) => {
 
     pool.getConnection((err, connection) => {
         if(err) throw err
         console.log(`connected as id ${connection.threadId}`)
 
-        connection.query ( 'SELECT * from beers', (err, rows) => {
+        connection.query ( 'SELECT * from info_etudiant', (err, rows) => {
             connection.release() //return the connection to pool
 
             if (!err) {
@@ -41,14 +41,14 @@ app.get('', (req, res) => {
 
 
 
-//  Get a beer by ID
+//  Get a student by ID
 app.get('/:id', (req, res) => {
     
     pool.getConnection((err, connection) => {
         if(err) throw err
         console.log(`connected as id ${connection.threadId}`)
 
-        connection.query ( 'SELECT * from beers WHERE id = ?', [req.params.id], (err, rows) => {
+        connection.query ( 'SELECT * from info_etudiant WHERE id = ?', [req.params.id], (err, rows) => {
             connection.release() //return the connection to pool
 
             if (!err) {
@@ -62,18 +62,18 @@ app.get('/:id', (req, res) => {
 })
 
 
-//  Delete a records / beer
+//  Delete a records / student
 app.delete('/:id', (req, res) => {
     
     pool.getConnection((err, connection) => {
         if(err) throw err
         console.log(`connected as id ${connection.threadId}`)
 
-        connection.query ( 'DELETE from beers WHERE id = ?', [req.params.id], (err, rows) => {
+        connection.query ( 'DELETE from info_etudiant WHERE id = ?', [req.params.id], (err, rows) => {
             connection.release() //return the connection to pool
 
             if (!err) {
-                res.send(`Beer with the Record ID: ${[req.params.id]} has been removed.`)
+                res.send(`Student with the ID: ${[req.params.id]} has been removed.`)
             } else {
                 console.log(err)
             }
@@ -91,11 +91,11 @@ app.post('', (req, res) => {
 
         const params = req.body
 
-        connection.query ( 'INSERT INTO beers SET ?', params , (err, rows) => {
+        connection.query ( 'INSERT INTO info_etudiant SET ?', params , (err, rows) => {
             connection.release() //return the connection to pool
 
             if (!err) {
-                res.send(`Beer with the Record ID: ${params.name} has been added.`)
+                res.send(`Student with the ID: ${params.first_name} has been added.`)
             } else {
                 console.log(err)
             }
@@ -105,20 +105,20 @@ app.post('', (req, res) => {
 })
 })
 
-//  Update a record / beer
+//  Update a record / student
 app.put('', (req, res) => {
     
     pool.getConnection((err, connection) => {
         if(err) throw err
         console.log(`connected as id ${connection.threadId}`)
 
-        const { id, name, tagline, description, image } = req.body
+        const { id, first_name, last_name, filiere } = req.body
 
-        connection.query ( 'UPDATE beers SET name = ?, tagline = ?, description = ?, image = ? WHERE id = ?', [name, tagline, description, image, id], (err, rows) => {
+        connection.query ( 'UPDATE info_etudiant SET first_name = ?, last_name = ?, filiere = ? = ? WHERE id = ?', [first_name, last_name, filiere, id], (err, rows) => {
             connection.release() //return the connection to pool
 
             if (!err) {
-                res.send(`Beer with the  name: ${name} has been updated.`)
+                res.send(`Student with the  name: ${first_name} has been updated.`)
             } else {
                 console.log(err)
             }
